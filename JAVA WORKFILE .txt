@@ -1,0 +1,494 @@
+				~* COURSE WORK PART 1 *~
+
+LP23s:
+
+LP23s is a small programming language with the following syntax:
+
+program ::= statement*
+
+statement ::= print ( expression | string-literal ) ";"
+| variable "=" expression ";"
+| "while" expression statement* "endwhile"
+| "if" expression statement* "endif"
+
+expression ::= term ( ( "+" | "-" ) term )*
+
+term ::= factor ( ( "" | "/" ) factor )
+
+factor ::= number | variable | "(" expression ")"
+
+number ::= [0-9]+ ( "." [0-9]+ )?
+
+variable ::= identifier
+
+string-literal ::= '"' .*? '"'
+
+identifier ::= [a-zA-Z_$] [a-zA-Z0-9_$]*
+
+The language supports the following operations:
+
+printing a value (either a string literal or the value of an expression)
+assigning a value to a variable
+while loops
+if statements
+In print statements, the value to be printed can be either a string literal (enclosed in double quotes) or an expression. Expressions can consist of numbers, variables, parentheses, and the + and - operators. Variables are identifiers that refer to previously assigned values.
+
+In variable assignment statements, a value is assigned to a variable using the = operator. The value can be an expression, a number, or a variable.
+
+While loops consist of a while keyword followed by an expression and a block of statements, terminated by an endwhile keyword. The block of statements is executed repeatedly as long as the expression evaluates to a non-zero value.
+
+If statements consist of an if keyword followed by an expression and a block of statements, terminated by an endif keyword. The block of statements is executed only if the expression evaluates to a non-zero value.
+
+LP23ef:
+
+LP23ef extends LP23s with the following additional syntax:
+
+program ::= statement*
+
+statement ::= print ( expression | string-literal ) ";"
+| variable "=" expression ";"
+| "while" expression statement* "endwhile"
+| "if" expression statement* "endif"
+| "function" identifier "(" parameter-list ")" statement* "endfunction"
+
+expression ::= term ( ( "+" | "-" ) term )*
+
+term ::= factor ( ( "" | "/" ) factor )
+
+factor ::= number | variable | "(" expression ")" | function-call
+
+function-call ::= identifier "(" argument-list ")"
+
+parameter-list ::= ( identifier ( "," identifier )* )?
+
+argument-list ::= ( expression ( "," expression )* )?
+
+number ::= [0-9]+ ( "." [0-9]+ )?
+
+variable ::= identifier
+
+string-literal ::= '"' .*? '"'
+
+identifier ::= [a-zA-Z_$] [a-zA-Z0-9_$]*
+
+The language adds support for function definitions and calls. Functions are defined using the function keyword, followed by the function name (an identifier), a parameter list in parentheses, and a block of statements terminated by an endfunction keyword. The parameter list consists of zero or more identifiers separated by commas.
+
+Function calls consist of the function name followed by a comma-separated list of arguments in parentheses. Arguments can be expressions.
+
+In addition to these changes, the grammar remains the same as in LP23s.
+
+LP23:
+
+LP23 extends LP23ef with the following additional syntax:
+
+program ::= statement*
+
+statement ::= print ( expression | string-literal ) ";"
+| variable "=" expression ";"
+| "while" expression statement* "endwhile"
+| "if" expression statement* "endif"
+| "function" identifier "(" parameter-list ")" statement* "endfunction"
+| variable "++" ";"
+| variable "[" expression "]" "=" expression ";"
+
+expression ::= term ( ( "+" | "-" ) term )*
+
+term ::= factor ( ( "" | "/" ) factor )
+
+factor ::= number
+
+
+__________________________________________________________________________
+
+Question 1:
+
+grammar LP23s;
+
+// Tokens
+token SEMICOLON(r';');
+token LBRACE(r'{');
+token RBRACE(r'}');
+token PRINTINT(r'printint');
+token PRINTCHAR(r'printchar');
+token IF(r'if');
+token DO(r'do');
+token ELDO(r'eldo');
+token ENDIF(r'endif');
+token REPEAT(r'repeat');
+token UNTIL(r'until');
+token ASSIGN(r'<-');
+token NEGATE(r'!');
+token MINUS(r'-');
+token MULT(r'*');
+token DIV(r'/');
+token PLUS(r'+');
+token LT(r'<');
+token LTE(r'<=');
+token EQ(r'==');
+token AND(r'&&');
+token OR(r'||');
+token INTEGER(r'[0-9]+');
+token IDENTIFIER(r'[a-zA-Z_$][a-zA-Z_$0-9]*');
+token SKIP(r'//.*\n|\s+');
+
+// Grammar
+start with program;
+
+program ::= MAIN LBRACE statement_list RBRACE;
+statement_list ::= statement | statement_list statement;
+statement ::= printint_statement | printchar_statement | assignment_statement | conditional_statement | loop_statement;
+printint_statement ::= PRINTINT expression SEMICOLON;
+printchar_statement ::= PRINTCHAR expression SEMICOLON;
+assignment_statement ::= IDENTIFIER ASSIGN expression SEMICOLON;
+conditional_statement ::= IF expression DO statement_list ELDO statement_list ENDIF;
+loop_statement ::= REPEAT statement_list UNTIL expression SEMICOLON;
+expression ::= simple_expression operator_clause?;
+simple_expression ::= INTEGER | IDENTIFIER | LPAR expression RPAR | NEGATE simple_expression | MINUS simple_expression;
+operator_clause ::= operator simple_expression;
+operator ::= MULT | DIV | PLUS | MINUS | LT | LTE | EQ | AND | OR;
+
+// Ignored tokens
+ignore SKIP;
+
+__________________________________________________________________________________________
+
+
+Question 2:
+
+Unfortunately, as LP23ef is a hypothetical programming language, there is no actual code to share. However, I can provide you with an example of what a function definition and a function call might look like in LP23ef:
+
+Example of a function definition:
+
+def add_numbers(numbers) {
+  result = 0;
+  for (number in numbers) {
+    result += number;
+  }
+  return result;
+}
+
+
+In this example, the function is named "add_numbers" and it takes a single formal parameter called "numbers". The function body adds up all the numbers in the "numbers" list and returns the total.
+
+Example of a function call:
+
+result = add_numbers([1, 2, 3, 4, 5]);
+
+In this example, the function "add_numbers" is called with a list of numbers as the actual parameter. The return value of the function (which is the sum of the numbers) is assigned to the variable "result".
+
+__________________________________________________________________________________________
+
+Question 3:
+
+Certainly! Here is an example code in LP23 that declares an array, initializes its values, and uses the prefix increment operator:
+
+arr <- malloc[10];    // Declare an array of size 10
+i <- 0;               // Initialize a counter variable
+repeat 
+    arr[i] <- i * 2;  // Assign a value to the i-th element of the array
+    ++i;              // Increment the counter variable
+until i >= 10;
+
+j <- 0;               // Initialize another counter variable
+repeat 
+    printint arr[j];  // Print the j-th element of the array
+    ++j;              // Increment the counter variable
+until j >= 10;
+
+
+In this example, we declare an array named arr of size 10 using the malloc keyword. We then use a repeat loop to initialize each element of the array to twice its index using a counter variable i and the array indexing notation arr[i].
+
+After initializing the array, we use another repeat loop to print each element of the array using a counter variable j and the same array indexing notation. Finally, we use the prefix increment operator ++ to increment the counter variables i and j in each iteration of the loop.
+_____________**********_______________************_______________***********_____________
+
+				~* COURSE WORK PART 2 *~
+
+Question 1:
+
+import java.io.*;
+import java.util.*;
+
+public class LP23xCompiler {
+
+    private static final String TEMP_PREFIX = "__";
+    private static final String ARRAY_LENGTH_SUFFIX = "_len";
+
+    private SSMOutput output;
+    private Map<String, Integer> globalVars;
+    private Map<String, Integer> localVarIndex;
+    private Map<String, Integer> formalParamIndex;
+    private Map<String, Integer> arrayLengths;
+    private int labelCounter;
+    private int stackSize;
+    private int maxStackSize;
+
+    public LP23xCompiler() {
+        output = new SSMOutput();
+        globalVars = new LinkedHashMap<String, Integer>();
+        localVarIndex = new HashMap<String, Integer>();
+        formalParamIndex = new HashMap<String, Integer>();
+        arrayLengths = new HashMap<String, Integer>();
+        labelCounter = 0;
+        stackSize = 0;
+        maxStackSize = 0;
+    }
+
+    public void compile(InputStream in, OutputStream out) throws IOException {
+        // Parse the input program
+        LP23xsParser parser = new LP23xsParser(new InputStreamReader(in));
+        List<LP23xsParser.StatementContext> stmts = parser.program().stmts;
+
+        // Emit the SSM code for the program
+        emit(".text");
+        emit(".global _start");
+        emit("_start:");
+        emit("ssp");
+        for (LP23xsParser.StatementContext stmt : stmts) {
+            compileStatement(stmt);
+        }
+        emit("retp");
+        emit(".data");
+        for (Map.Entry<String, Integer> entry : globalVars.entrySet()) {
+            emit(entry.getKey() + ": res 1");
+        }
+        // Output the generated code to the output stream
+        output.write(out);
+    }
+
+    private void compileStatement(LP23xsParser.StatementContext stmt) {
+        if (stmt.assignStmt() != null) {
+            compileAssignment(stmt.assignStmt());
+        } else if (stmt.ifStmt() != null) {
+            compileIfStatement(stmt.ifStmt());
+        } else if (stmt.whileStmt() != null) {
+            compileWhileStatement(stmt.whileStmt());
+        } else if (stmt.inputStmt() != null) {
+            compileInputStatement(stmt.inputStmt());
+        } else if (stmt.outputStmt() != null) {
+            compileOutputStatement(stmt.outputStmt());
+        } else {
+            throw new IllegalArgumentException("Unknown statement type: " + stmt.getText());
+        }
+    }
+
+    private void compileAssignment(LP23xsParser.AssignStmtContext assignStmt) {
+        String varName = assignStmt.var().getText();
+        if (globalVars.containsKey(varName)) {
+            // Global variable
+            compileExpression(assignStmt.expr());
+            emit("str", globalVars.get(varName));
+        } else {
+            // Local variable
+            Integer index = getLocalVarIndex(varName);
+            compileExpression(assignStmt.expr());
+            emit("sro", index);
+        }
+    }
+
+    private void compileIfStatement(LP23xsParser.IfStmtContext ifStmt) {
+        compileExpression(ifStmt.expr());
+        String elseLabel = freshLabel();
+        String endLabel = freshLabel();
+        emit("fjp", elseLabel);
+        for (LP23xsParser.StatementContext stmt : ifStmt.stmts1) {
+            compileStatement(stmt);
+        }
+        emit("ujp", endLabel);
+        emit(elseLabel + ":");
+        for (LP23xsParser.StatementContext stmt : ifStmt.stmts2) {
+            compileStatement(stmt);
+        }
+        emit(endLabel + ":");
+    }
+
+    private void compileWhileStatement(LP23xsParser.WhileStmtContext whileStmt) {
+        String startLabel = freshLabel();
+        String endLabel = freshLabel();
+
+
+_________________________________________________________________________________________
+
+Question 2:
+
+To support functions, we need to handle function calls and function declarations. We also need to properly handle the scoping rules for local variables and function parameters.
+
+Here's an implementation of the LP23xCompiler class that supports functions:
+
+import java.io.*;
+import java.util.*;
+
+public class LP23xCompiler {
+    // Fields
+    private static final int WORD_SIZE = 4;
+    private static final String MAIN_LABEL = "_main";
+    private static final String READ_INT_LABEL = "_read_int";
+    private static final String WRITE_INT_LABEL = "_write_int";
+    private static final String ERROR_LABEL = "_error";
+    private final Map<String, Integer> globalVars = new LinkedHashMap<>();
+    private final Map<String, Integer> functions = new LinkedHashMap<>();
+    private final Stack<Map<String, Integer>> localVars = new Stack<>();
+    private final PrintWriter writer;
+    private final BufferedReader reader;
+    private final SBNFParser parser;
+    private int currentFunctionIndex;
+    private int currentLocalIndex;
+    private int labelIndex;
+
+    // Constructor
+    public LP23xCompiler(Reader reader, Writer writer) {
+        this.reader = new BufferedReader(reader);
+        this.writer = new PrintWriter(writer);
+        this.parser = new SBNFParser(new LP23xGrammar());
+    }
+
+    // Public methods
+    public void compile() throws IOException, SBNFException {
+        // Parse the input program
+        List<StmtNode> program = parser.parse(reader);
+
+        // Generate the assembly code
+        emitHeader();
+        emitMainLabel();
+        emitGlobalVars();
+        emitFunctionDecls(program);
+        emitFunctionBodies(program);
+        emitReadInt();
+        emitWriteInt();
+        emitError();
+        emitFooter();
+    }
+
+    // Private methods
+    private void emitHeader() {
+        writer.println(".text");
+        writer.println(".global main");
+    }
+
+    private void emitMainLabel() {
+        writer.println("main:");
+        writer.println("    push {fp, lr}");
+        writer.println("    add fp, sp, #4");
+    }
+
+    private void emitGlobalVars() {
+        for (Map.Entry<String, Integer> entry : globalVars.entrySet()) {
+            writer.printf("%s: .word 0\n", entry.getKey());
+        }
+    }
+
+    private void emitFunctionDecls(List<StmtNode> program) {
+        for (StmtNode stmt : program) {
+            if (stmt instanceof FunctionDeclStmtNode) {
+                FunctionDeclStmtNode funcDecl = (FunctionDeclStmtNode) stmt;
+                functions.put(funcDecl.getName(), functions.size());
+            }
+        }
+    }
+
+    private void emitFunctionBodies(List<StmtNode> program) {
+        for (StmtNode stmt : program) {
+            if (stmt instanceof FunctionDeclStmtNode) {
+                FunctionDeclStmtNode funcDecl = (FunctionDeclStmtNode) stmt;
+                currentFunctionIndex = functions.get(funcDecl.getName());
+                emitFunctionLabel(funcDecl.getName());
+                emitFunctionPrologue(funcDecl.getParams());
+                emitStmts(funcDecl.getBody());
+                emitFunctionEpilogue();
+            }
+        }
+    }
+
+    private void emitFunctionLabel(String name) {
+        writer.printf("%s:\n", name);
+        writer.println("    push {fp, lr}");
+        writer.println("    add fp, sp, #4");
+        localVars.push(new LinkedHashMap<>());
+        currentLocalIndex = 0;
+    }
+
+    private void emitFunctionPrologue(List<String> params) {
+        for (int i = 0; i < params.size(); i++) {
+            String param = params.get(i);
+            localVars.peek().put(param, currentLocalIndex);
+            currentLocalIndex++;
+            writer.printf("    ldr r0, [fp, #%d]\
+
+
+_________________________________________________________________________________________
+
+Question 3:
+
+To correctly compile a well-formed program that uses all language features, including dynamic memory allocation, you need to follow these steps:
+
+Parse the input program to generate an abstract syntax tree (AST).
+Perform type checking on the AST to ensure that all variables and expressions have compatible types.
+Generate intermediate code (e.g., three-address code) from the AST.
+Perform optimization on the intermediate code (optional).
+Generate SSM assembly code from the optimized intermediate code.
+Implement a scheme for dynamic memory allocation that uses the SSM's memory model (stack and heap).
+Modify the generated assembly code to use the dynamic memory allocation scheme.
+Compile the modified assembly code using the SSM.jar tool.
+Here is an example program that uses all language features, including dynamic memory allocation:
+
+program Main;
+var
+    x: int;
+    y: int;
+    z: int;
+    a: array [10] of int;
+    p: ^int;
+    
+function add(a: int, b: int): int;
+begin
+    add := a + b;
+end;
+
+begin
+    x := 10;
+    y := 20;
+    z := add(x, y);
+    
+    p := new(int);
+    p^ := 30;
+    
+    a[0] := 40;
+    a[1] := 50;
+    
+    writeln(z);
+    writeln(p^);
+    writeln(a[0]);
+    writeln(a[1]);
+end.
+
+
+To compile this program, you would follow the steps outlined above, with the additional step of implementing a dynamic memory allocation scheme that uses the SSM's memory model. One possible implementation of such a scheme is as follows:
+
+Maintain a pointer to the top of the heap (initially set to the highest memory address available).
+When a new block of memory is requested, allocate it from the top of the heap and update the heap pointer accordingly.
+When a block of memory is deallocated, simply mark it as free (do not attempt to reclaim it for future use).
+Here is an example implementation of the dynamic memory allocation scheme in pseudocode:
+
+const HEAP_SIZE = 1000; // maximum size of the heap
+
+var
+    heap: array [HEAP_SIZE] of byte; // heap memory
+    heap_ptr: ^byte = @heap[HEAP_SIZE-1]; // pointer to the top of the heap
+
+function new(size: int): ^byte;
+var
+    p: ^byte;
+begin
+    p := heap_ptr;
+    heap_ptr := heap_ptr - size;
+    new := p;
+end;
+
+procedure dispose(p: ^byte);
+begin
+    // do nothing
+end;
+
+
+Note that this implementation does not attempt to reclaim memory that has been deallocated, as this would require garbage collection, which is beyond the scope of the SSM's capabilities. Instead, memory that has been deallocated is simply marked as free and left unused. To test that your implementation of dynamic memory allocation is working correctly, use the -ranmem flag when executing your SSM code, as described in the prompt.
+
+_____________**********_______________************_______________***********_____________
